@@ -72,7 +72,7 @@ if (get_output.Count > 0)
     Console.WriteLine("\n{0} Revit backup files are going to be deleted.", (get_output.Count).ToString());
     Console.Write("Do you want to proceed (Y/N)? ");
     get_continue = Console.ReadLine();
-    if (get_continue.ToLower() == "y")
+    if (get_continue is not null && get_continue.ToLower() == "y")
     {
         Console.WriteLine("Proceeding...\n");
         foreach (string filename in get_output)
