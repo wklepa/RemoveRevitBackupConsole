@@ -12,6 +12,7 @@ foreach (string line in header)
 
 string? get_input = "";
 List<string> get_output = new List<string>();
+List<string> get_report = new List<string>();
 
 while (true)
 {
@@ -67,6 +68,7 @@ else
 if (get_output.Count > 0)
 {
     string? get_continue = "";
+    string? save_report = "";
     int counter_true = 0;
     int counter_false = 0;
     Console.WriteLine("\n{0} Revit backup files are going to be deleted.", (get_output.Count).ToString());
@@ -82,15 +84,24 @@ if (get_output.Count > 0)
             {
                 File.Delete(filename);
                 Console.WriteLine(getName + " ---> removed.");
+                get_report.Add(filename + "\tREMOVED");
                 counter_true++;
             }
             catch
             {
                 Console.WriteLine(getName + " ---> failed!");
+                get_report.Add(filename + "\tFAILED");
                 counter_false++;
             }
         }
         Console.WriteLine("\n{0} file(s) removed, {1} failed.", counter_true.ToString(), counter_false.ToString());
+        Console.Write("Do you want to save the report (Y/N)? ");
+        save_report = Console.ReadLine();
+        if (save_report is not null && save_report.ToLower() == "y")
+        {
+            string save_path_name = Path.Combine(get_input, "_RemovedBackupFiles.txt");
+            await File.WriteAllLinesAsync(save_path_name, get_report);
+        }
     }
     else
     {
@@ -101,3 +112,11 @@ else
 {
     Console.WriteLine("There are no Revit backup files to remove.");
 }
+
+get_output.Clear();
+get_report.Clear();
+
+/*
+ https://docs.microsoft.com/en-us/dotnet/api/system.string.padleft?view=net-6.0
+Use pae method to allign files nicely
+ */
