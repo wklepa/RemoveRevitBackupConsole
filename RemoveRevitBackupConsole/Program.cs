@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 
+// Print header
 string[] header = {"The script to remove Revit files from the given folder.",
                    "The files in the subfolders are also included.",
                    "developed by wojciech.klepacki@grimshaw.global 2018-2022" };
@@ -10,9 +11,12 @@ foreach (string line in header)
     Console.WriteLine(line);
 }
 
+// Define variables to be used globally
 string? get_input = "";
+string backup_name = "_RemovedBackupFiles.txt";
 List<string> get_output = new List<string>();
 List<string> get_report = new List<string>();
+List<int> get_length = new List<int>();
 
 while (true)
 {
@@ -54,7 +58,8 @@ if (filesDirs.Length > 0)
             if (Int32.TryParse(getTmp, out tmpInt))
             {
                 Console.WriteLine("{0}: {1}", counter.ToString(), getName);
-                get_output.Add(filename);
+                get_output.Add(filename);  // Add filename (name.extension and path)
+                get_length.Add(getName.Length);  // Add filename only length
                 counter++;
             }
         }
@@ -76,20 +81,37 @@ if (get_output.Count > 0)
     get_continue = Console.ReadLine();
     if (get_continue is not null && get_continue.ToLower() == "y")
     {
+        // Calculate maximum length
+        int max_length = get_length.Max();
+        int length_factor = 5;
+        char pad = '-';
+        // Construct ZIP with get_output and get_length
+        var outputLength = get_output.Zip(get_length, (o, l) => new {Name = o, Len = l});
         Console.WriteLine("Proceeding...\n");
-        foreach (string filename in get_output)
+        foreach (var assembly in outputLength)
         {
+            string filename = assembly.Name;
+            int length = assembly.Len;
             string getName = Path.GetFileName(filename);
             try
             {
+                // Remove backup file from folder
                 File.Delete(filename);
-                Console.WriteLine(getName + " ---> removed.");
+                string suffix = "---> removed.";
+                int suffix_length = suffix.Length;
+                int rec_length = max_length - length + suffix_length + length_factor;
+                string suffix_padded = suffix.PadLeft(rec_length, pad);
+                Console.WriteLine("{0}: {1}", (counter_true + 1).ToString(), getName + suffix_padded);
                 get_report.Add(filename + "\tREMOVED");
                 counter_true++;
             }
             catch
             {
-                Console.WriteLine(getName + " ---> failed!");
+                string suffix = "---> failed!";
+                int suffix_length = suffix.Length;
+                int rec_length = max_length - length + suffix_length + length_factor;
+                string suffix_padded = suffix.PadLeft(rec_length, pad);
+                Console.WriteLine("{0}: {1}", (counter_false + 1).ToString(), getName + suffix_padded);
                 get_report.Add(filename + "\tFAILED");
                 counter_false++;
             }
@@ -99,7 +121,7 @@ if (get_output.Count > 0)
         save_report = Console.ReadLine();
         if (save_report is not null && save_report.ToLower() == "y")
         {
-            string save_path_name = Path.Combine(get_input, "_RemovedBackupFiles.txt");
+            string save_path_name = Path.Combine(get_input, backup_name);
             await File.WriteAllLinesAsync(save_path_name, get_report);
         }
     }
@@ -113,10 +135,7 @@ else
     Console.WriteLine("There are no Revit backup files to remove.");
 }
 
+// Clear list values
 get_output.Clear();
 get_report.Clear();
-
-/*
- https://docs.microsoft.com/en-us/dotnet/api/system.string.padleft?view=net-6.0
-Use pae method to allign files nicely
- */
+get_length.Clear();
