@@ -6,9 +6,11 @@ string[] header = {"The script to remove Revit files from the given folder.",
                    "The files in the subfolders are also included.",
                    "developed by wojciech.klepacki@grimshaw.global 2018-2022" };
 
+int max_width = header.Length;
+
 foreach (string line in header)
 {
-    Console.WriteLine(line);
+    Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (line.Length / 2)) + "}", line));
 }
 
 // Define variables to be used globally
@@ -86,7 +88,7 @@ if (get_output.Count > 0)
         int length_factor = 5;
         char pad = '-';
         // Construct ZIP with get_output and get_length
-        var outputLength = get_output.Zip(get_length, (o, l) => new {Name = o, Len = l});
+        var outputLength = get_output.Zip(get_length, (n, l) => new {Name = n, Len = l});
         Console.WriteLine("Proceeding...\n");
         foreach (var assembly in outputLength)
         {
