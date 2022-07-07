@@ -6,8 +6,6 @@ string[] header = {"The script to remove Revit files from the given folder.",
                    "The files in the subfolders are also included.",
                    "developed by wojciech.klepacki@grimshaw.global 2018-2022" };
 
-int max_width = header.Length;
-
 foreach (string line in header)
 {
     Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (line.Length / 2)) + "}", line));
