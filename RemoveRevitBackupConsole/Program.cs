@@ -10,6 +10,7 @@ namespace RemoveRevitBackupConsole
             // Print header
             string[] header = {"The script to remove Revit files from the given folder.",
                    "The files in the subfolders are also included.",
+                   "The script considers 'rvt' and 'rfa' files only.",
                    "developed by wojciech.klepacki@grimshaw.global 2018-2022" };
 
             foreach (string line in header)
@@ -23,7 +24,7 @@ namespace RemoveRevitBackupConsole
             List<string> get_output = new List<string>();
             List<string> get_report = new List<string>();
             List<int> get_length = new List<int>();
-            bool enabler = false; // enables file deleting function
+            bool enabler = true; // enables file deleting function
 
             while (true)
             {
@@ -149,6 +150,10 @@ namespace RemoveRevitBackupConsole
             get_output.Clear();
             get_report.Clear();
             get_length.Clear();
+
+            // Wait for the key to be pressed
+            Console.Write("\nPress any key to exit...");
+            Console.Read();
         }
     }
 }
