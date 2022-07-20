@@ -57,7 +57,7 @@ namespace RemoveRevitBackupConsole
                 int counter = 1;
                 foreach (string filename in filesDirs)
                 {
-                    if (Path.GetExtension(filename) == ".rfa" || Path.GetExtension(filename) == ".rft")
+                    if (Path.GetExtension(filename) == ".rfa" || Path.GetExtension(filename) == ".rvt")
                     {
                         int tmpInt;
                         string getName = Path.GetFileName(filename);
