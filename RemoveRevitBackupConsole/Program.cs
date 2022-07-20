@@ -151,9 +151,9 @@ namespace RemoveRevitBackupConsole
             get_report.Clear();
             get_length.Clear();
 
-            // Wait for the key to be pressed
+            // Wait for any key to be pressed
             Console.Write("\nPress any key to exit...");
-            Console.Read();
+            Console.ReadKey();
         }
     }
 }
